@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>时钟</title>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        var radius = canvas.height / 2;
+
+        Init();
+
+        function Init() {
+            window.addEventListener('resize', ResizeCanvas, false);
+            ResizeCanvas();
+        }
+
+        function ResizeCanvas() {
+            var s = Math.min(window.innerWidth, window.innerHeight);
+            canvas.width = canvas.height = s;
+            radius = canvas.height / 2;
+            ctx.translate(radius, radius);
+
+            radius *= 0.8;
+            DrawClock();
+        }
+
+        setInterval(DrawClock, 1000);
+
+        function DrawClock() {
+            DrawFace(ctx, radius);
+            DrawTime(ctx, radius);
+            DrawNumbers(ctx, radius);
+            DrawString(ctx, radius);
+        }
+
+        function DrawFace(ctx, radius) {
+            var grad;
+            ctx.beginPath();
+            ctx.arc(0, 0, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+
+            var grad = ctx.createLinearGradient(0, 0, radius, 0) //创建一个渐变色线性对象
+            grad.addColorStop(0, "#f00");                  //定义渐变色颜色
+            grad.addColorStop(1, "#00f");
+
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = radius * 0.1;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(0, 0, radius * 0.1, 0, 2 * Math.PI);
+            ctx.fillStyle = '#333';
+            ctx.fill();
+        }
+
+        function DrawNumbers(ctx, radius) {
+            ctx.font = radius * 0.2 + "px arial";
+            ctx.textBaseline = "middle";
+            ctx.textAlign = "center";
+            for (var num = 1; num <= 12; num++) {
+                var ang = num * Math.PI / 6;
+                ctx.rotate(ang);
+                ctx.translate(0, -radius * 0.8);
+                ctx.rotate(-ang);
+                ctx.fillText(num.toString(), 0, 0);
+                ctx.rotate(ang);
+                ctx.translate(0, radius * 0.8);
+                ctx.rotate(-ang);
+            }
+        }
+
+        function DrawHand(ctx, pos, length, width) {
+            ctx.beginPath();
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = width;
+            ctx.lineCap = "round";
+            ctx.moveTo(0, 0);
+            ctx.rotate(pos);
+            ctx.lineTo(0, -length);
+            ctx.stroke();
+            ctx.rotate(-pos);
+        }
+
+
+        function DrawTime(ctx, radius) {
+            var date = new Date();
+            var hour = date.getHours();
+            var minute = date.getMinutes();
+            var second = date.getSeconds();
+
+            hour = hour % 12;
+            hour = (hour * Math.PI / 6) + (minute * Math.PI / (6 * 60)) + (second * Math.PI / (360 * 60));
+            DrawHand(ctx, hour, radius * 0.5, radius * 0.05);
+            minute = (minute * Math.PI / 30) + (second * Math.PI / (30 * 60));
+            DrawHand(ctx, minute, radius * 0.8, radius * 0.03);
+            second = (second * Math.PI / 30);
+            DrawHand(ctx, second, radius * 0.9, radius * 0.02);
+        }
+
+        function DrawString(ctx, radius) {
+            ctx.translate(0, -radius * 0.25);
+            ctx.font = radius * 0.1 + "px arial";
+            ctx.textBaseline = "middle";
+            ctx.textAlign = "center";
+
+            var date = new Date();
+
+            var s = date.getFullYear().toString() + "-"
+                + (date.getMonth() + 1).toString() + "-"
+                + date.getDate().toString() + "  "
+                + "星期 " + date.getDay().toString() + "  "
+                + date.getHours().toString() + ":"
+                + date.getMinutes().toString() + ":"
+                + date.getSeconds().toString();
+            ctx.fillText(s, 0, 0);
+
+            ctx.translate(0, radius * 0.25);
+        }
+
+    </script>
+
+</body>
+</html>

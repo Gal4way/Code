@@ -1,0 +1,22 @@
+{
+    "files.associations": {
+        "cmath": "cpp",
+        "ostream": "cpp",
+        "iostream": "cpp",
+        "array": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "utility": "cpp",
+        "bitset": "cpp",
+        "set": "cpp",
+        "unordered_map": "cpp",
+        "*.tcc": "cpp",
+        "map": "cpp",
+        "list": "cpp"
+    },
+    "cSpell.ignoreWords": [
+        "aasdf",
+        "aasdfasdfasdfasdfas",
+        "asdf"
+    ]
+}
